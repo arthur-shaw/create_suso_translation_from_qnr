@@ -1,0 +1,6 @@
+# do not track Excel outputs
+*.xlsx
+
+# do not track R data set
+*.rds
+
