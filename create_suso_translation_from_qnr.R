@@ -149,7 +149,7 @@ suso_template_w_fr <- suso_translation_template |>
 # identify widow questions and orphan translations
 # ------------------------------------------------------------------------------
 
-widow_questions <- suso_template_w_fr <- suso_translation_template |>
+widow_questions <- suso_translation_template |>
 	dplyr::anti_join(
     var_question_text_mapping,
     by = c("Variable" = "variable")
