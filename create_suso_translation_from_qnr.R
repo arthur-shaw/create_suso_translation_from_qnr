@@ -167,7 +167,10 @@ orphan_translations <- var_question_text_mapping |>
 # ------------------------------------------------------------------------------
 
 writexl::write_xlsx(
-  x = suso_template_w_fr,
+  # write each data frame in the list to a named tab
+  x = list(
+    "Translations" = suso_template_w_fr
+  ),
   path = fs::path(
     proj_dir, "data", "02_suso_translation",
     "{français}Childcare Situation Assessment - Demand Side Survey.xlsx"
