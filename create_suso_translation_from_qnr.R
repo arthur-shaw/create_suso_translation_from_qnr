@@ -124,8 +124,23 @@ suso_translation_template_path <- fs::path(
   "{New translation}Childcare Situation Assessment - Demand Side Survey.xlsx"
 )
 
+# `Translations` sheet
 suso_translation_template <- suso_translation_template_path |>
-	readxl::read_excel()
+	readxl::read_excel(sheet = "Translations")
+
+# get names of other sheets
+names_all_sheets <- readxl::excel_sheets(path = suso_translation_template_path)
+names_other_sheets <- names_all_sheets[-1] # removing `Translations`
+
+# ingest content of those sheets to a named list of data frames
+all_other_sheets <- names_other_sheets |>
+  purrr::map(
+    .f = ~ readxl::read_excel(
+      path = suso_translation_template_path,
+      sheet = .x
+    )
+  ) |>
+    rlang::set_names(nm = names_other_sheets)
 
 # ------------------------------------------------------------------------------
 # merge extracted translations into SuSo translation file
@@ -181,11 +196,15 @@ orphan_translations <- var_question_text_mapping |>
 # save to disk
 # ------------------------------------------------------------------------------
 
+# compose the named list of data frames-cum-tabs
+# so that `writexl` writes each data frame as a named tab
+sheets <- c(
+  list("Translations" = suso_template_w_fr),
+  all_other_sheets
+)
+
 writexl::write_xlsx(
-  # write each data frame in the list to a named tab
-  x = list(
-    "Translations" = suso_template_w_fr
-  ),
+  x = sheets,
   path = fs::path(
     proj_dir, "data", "02_suso_translation",
     "{français}Childcare Situation Assessment - Demand Side Survey.xlsx"
