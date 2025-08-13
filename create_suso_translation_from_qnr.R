@@ -143,7 +143,16 @@ suso_template_w_fr <- suso_translation_template |>
       false = Translation
     )
   ) |>
-	dplyr::select(-question)
+	dplyr::select(-question) |>
+  # flag content where translators need to exercise care
+  # because text contains HTML tags that format text
+  dplyr::mutate(
+    # html tags such as `<br>` or `<font>`
+    has_html = grepl(
+      x = `Original text`,
+      pattern = "<.+>"
+    )
+  )
 
 # ------------------------------------------------------------------------------
 # identify widow questions and orphan translations
