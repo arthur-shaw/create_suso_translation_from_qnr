@@ -146,11 +146,17 @@ suso_template_w_fr <- suso_translation_template |>
 	dplyr::select(-question) |>
   # flag content where translators need to exercise care
   # because text contains HTML tags that format text
+  # or SuSo text subsitution markers that instruct CAPI to interpolate a value
   dplyr::mutate(
     # html tags such as `<br>` or `<font>`
     has_html = grepl(
       x = `Original text`,
       pattern = "<.+>"
+    ),
+    # SuSo text substition markers like `%rostertitle`
+    has_suso_substitution = grepl(
+      x = `Original text`,
+      pattern = "%.+%"
     )
   )
 
