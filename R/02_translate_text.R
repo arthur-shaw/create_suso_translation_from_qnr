@@ -33,7 +33,7 @@ translate_suso_qnr_text <- function(
     "You are an expert survey translator.",
     "You will translate text from {from_lang} to {to_lang}.",
     "For all translations, please respect the case/capitalization style of the",
-    "original text (e.g., ALL CAPS, lower case, Captial Case, etc.)",
+    "original text (e.g., ALL CAPS, lower case, Capital Case, etc.)",
     "In addition, respect grammatical/functional form of the source text",
     "(e.g., imperative, interogative, statement, sentence fragement, etc.)",
     "Return only the translated text.",
