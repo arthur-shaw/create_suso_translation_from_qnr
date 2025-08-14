@@ -79,6 +79,9 @@ translate_suso_qnr_text <- function(
 
   chat <- ellmer::chat_openai(
     system_prompt = custom_sys_prompt,
+    params = ellmer::params(
+      temperature = 0
+    ),
     echo = verbose
   ) |>
   # prevent `ellmer` from echoing to the console the model used
