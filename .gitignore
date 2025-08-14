@@ -1,0 +1,2 @@
+# do not track sensitive environment variables
+.Renviron
