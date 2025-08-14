@@ -193,18 +193,44 @@ orphan_translations <- var_question_text_mapping |>
   )
 
 # ------------------------------------------------------------------------------
-# save to disk
+# add machine translation to all tabs
 # ------------------------------------------------------------------------------
 
-# compose the named list of data frames-cum-tabs
-# so that `writexl` writes each data frame as a named tab
+# compose the named list of data frames
+# so that the translation function can be applied to each frame
+# and so that these data frames will written to Excel tabs bearing their name
 sheets <- c(
   list("Translations" = suso_template_w_fr),
   all_other_sheets
 )
 
+# iteratively translate questionnaire text
+# going tab by tab
+# and within each tab, going row by row
+sheets_w_ai_translation <- sheets |>
+	purrr::map(
+    .f = \(x) {
+      dplyr::mutate(
+        .data = x,
+        ai_translation = purrr::map_chr(
+          .x = `Original text`,
+          .f = ~ translate_suso_qnr_text(
+            from_lang = "English",
+            to_lang = "French",
+            text = .x
+          ),
+          .progress = TRUE
+        )
+      )
+    }
+  )
+
+# ------------------------------------------------------------------------------
+# save to disk
+# ------------------------------------------------------------------------------
+
 writexl::write_xlsx(
-  x = sheets,
+  x = sheets_w_ai_translation,
   path = fs::path(
     proj_dir, "data", "02_suso_translation",
     "{français}Childcare Situation Assessment - Demand Side Survey.xlsx"
